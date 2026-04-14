@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sinnvoll Academy – Schulung Standards & Systeme</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0f0e0c;
+    --surface: #1a1814;
+    --card: #221f1a;
+    --border: #2e2a24;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-dim: #8a6e32;
+    --text: #f0ead8;
+    --text-muted: #8a8070;
+    --text-mid: #b8ad96;
+    --green: #4a7c59;
+    --green-bright: #6aad80;
+    --red: #8b3a3a;
+    --red-bright: #d46060;
+    --accent: #c9a84c;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* PROGRESS BAR */
+  .progress-bar-wrap {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--border);
+    z-index: 100;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--gold);
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 3px; left: 0; right: 0;
+    background: rgba(15,14,12,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    z-index: 99;
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+  }
+  .nav-steps {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .nav-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+  .nav-dot.active { background: var(--gold); transform: scale(1.3); }
+  .nav-dot.done { background: var(--green-bright); }
+  .nav-timer {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* MAIN LAYOUT */
+  main {
+    padding-top: 72px;
+    max-width: 860px;
+    margin: 0 auto;
+    padding-bottom: 80px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  /* SLIDES */
+  .slide {
+    display: none;
+    animation: slideIn 0.4s ease;
+  }
+  .slide.active { display: block; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* HERO SLIDE */
+  .hero {
+    text-align: center;
+    padding: 60px 0 40px;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--gold-dim);
+    color: var(--gold-light);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 40px;
+    margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub {
+    font-size: 17px;
+    color: var(--text-mid);
+    max-width: 540px;
+    margin: 0 auto 40px;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 48px;
+  }
+  .hero-meta-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .hero-meta-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .hero-meta-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--gold);
+  }
+
+  /* SECTION HEADER */
+  .section-header {
+    margin-bottom: 32px;
+  }
+  .section-num {
+    font-size: 11px;
+    color: var(--gold);
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .section-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 3.5vw, 36px);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .section-header h2 .hl { color: var(--gold); }
+  .section-header p {
+    color: var(--text-mid);
+    font-size: 15px;
+    max-width: 600px;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-title .icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--gold-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .card p { color: var(--text-mid); font-size: 14px; }
+
+  /* WHY BOX */
+  .why-box {
+    background: linear-gradient(135deg, #1e1a10 0%, #1a1814 100%);
+    border: 1px solid var(--gold-dim);
+    border-left: 4px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .why-box .why-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .why-box p { color: var(--text); font-size: 15px; }
+
+  /* GRID */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 36px;
+    margin-bottom: 24px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 12px; top: 8px; bottom: 8px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--gold), var(--gold-dim), transparent);
+  }
+  .tl-item {
+    position: relative;
+    margin-bottom: 24px;
+  }
+  .tl-dot {
+    position: absolute;
+    left: -28px; top: 4px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 2px solid var(--bg);
+  }
+  .tl-item h4 {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .tl-item p {
+    font-size: 13px;
+    color: var(--text-mid);
+  }
+
+  /* ALENO HIGHLIGHT */
+  .aleno-box {
+    background: linear-gradient(135deg, #12201a 0%, #1a1814 100%);
+    border: 1px solid var(--green);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .aleno-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--green);
+    color: #d0f0dd;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 40px;
+    margin-bottom: 16px;
+  }
+  .aleno-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+
+  /* RULE LIST */
+  .rule-list {
+    list-style: none;
+    margin-bottom: 20px;
+  }
+  .rule-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .rule-list li:last-child { border-bottom: none; }
+  .rule-list .rule-icon {
+    width: 24px; height: 24px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .rule-icon.yes { background: var(--green); }
+  .rule-icon.no { background: var(--red); }
+  .rule-list .rule-text strong { display: block; color: var(--text); }
+  .rule-list .rule-text span { color: var(--text-muted); font-size: 13px; }
+
+  /* QUIZ */
+  .quiz-wrap { margin-bottom: 24px; }
+  .quiz-q {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .quiz-q-num {
+    font-size: 11px;
+    color: var(--gold);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .quiz-q-text {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+  .quiz-option {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-mid);
+    text-align: left;
+    transition: all 0.15s;
+    width: 100%;
+  }
+  .quiz-option:hover:not([disabled]) {
+    border-color: var(--gold-dim);
+    color: var(--text);
+    background: #1e1c16;
+  }
+  .quiz-option.correct {
+    background: #1a2e20;
+    border-color: var(--green-bright);
+    color: var(--green-bright);
+  }
+  .quiz-option.wrong {
+    background: #2a1a1a;
+    border-color: var(--red-bright);
+    color: var(--red-bright);
+  }
+  .quiz-feedback {
+    margin-top: 12px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: #1a2e20; color: var(--green-bright); border: 1px solid var(--green); }
+  .quiz-feedback.fail { background: #2a1a1a; color: var(--red-bright); border: 1px solid var(--red); }
+
+  .quiz-score {
+    text-align: center;
+    padding: 32px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    display: none;
+    margin-top: 24px;
+  }
+  .quiz-score.show { display: block; }
+  .quiz-score .score-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 56px;
+    color: var(--gold);
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .quiz-score p { color: var(--text-mid); }
+
+  /* SCENARIO EXERCISE */
+  .scenario-wrap { margin-bottom: 24px; }
+  .scenario-box {
+    background: #1c1814;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .scenario-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .scenario-text {
+    font-size: 15px;
+    color: var(--text);
+    font-style: italic;
+    border-left: 3px solid var(--gold-dim);
+    padding-left: 16px;
+    margin-bottom: 20px;
+  }
+  .scenario-question {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  .scenario-options { display: flex; flex-direction: column; gap: 8px; }
+  .scenario-option {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-mid);
+    text-align: left;
+    transition: all 0.15s;
+    width: 100%;
+  }
+  .scenario-option:hover:not([disabled]) {
+    border-color: var(--gold-dim);
+    color: var(--text);
+  }
+  .scenario-option.best {
+    background: #1a2e20;
+    border-color: var(--green-bright);
+    color: var(--green-bright);
+  }
+  .scenario-option.ok {
+    background: #1c2010;
+    border-color: #8aaa50;
+    color: #9aca60;
+  }
+  .scenario-option.wrong {
+    background: #2a1a1a;
+    border-color: var(--red-bright);
+    color: var(--red-bright);
+  }
+  .scenario-result {
+    margin-top: 16px;
+    padding: 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    display: none;
+  }
+  .scenario-result.show { display: block; }
+  .scenario-result.best-res { background: #1a2e20; border: 1px solid var(--green); color: var(--text-mid); }
+  .scenario-result.ok-res { background: #1c2010; border: 1px solid #8aaa50; color: var(--text-mid); }
+  .scenario-result.wrong-res { background: #2a1a1a; border: 1px solid var(--red); color: var(--text-mid); }
+  .scenario-result strong { display: block; font-size: 15px; margin-bottom: 6px; }
+  .scenario-result.best-res strong { color: var(--green-bright); }
+  .scenario-result.ok-res strong { color: #9aca60; }
+  .scenario-result.wrong-res strong { color: var(--red-bright); }
+
+  /* TABLE */
+  .sys-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+  .sys-table th {
+    text-align: left;
+    padding: 10px 14px;
+    background: var(--card);
+    color: var(--gold);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--gold-dim);
+  }
+  .sys-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--text-mid);
+  }
+  .sys-table td strong { color: var(--text); }
+  .sys-table tr:last-child td { border-bottom: none; }
+
+  /* BUTTONS */
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 32px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: #0f0e0c;
+  }
+  .btn-primary:hover { background: var(--gold-light); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { color: var(--text); border-color: var(--text-muted); }
+
+  /* INFO PILL */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 40px;
+    margin-right: 6px;
+    margin-bottom: 6px;
+  }
+  .pill-gold { background: #2a2210; color: var(--gold); border: 1px solid var(--gold-dim); }
+  .pill-green { background: #0e2016; color: var(--green-bright); border: 1px solid var(--green); }
+  .pill-red { background: #200e0e; color: var(--red-bright); border: 1px solid var(--red); }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 28px 0;
+  }
+
+  .trainer-note {
+    background: #14110a;
+    border: 1px dashed var(--gold-dim);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: var(--gold-dim);
+  }
+  .trainer-note strong { color: var(--gold); }
+
+  .highlight-text {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--text);
+    margin: 24px 0;
+  }
+  .highlight-text em { color: var(--gold); font-style: normal; }
+
+  .emoji-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .emoji-card {
+    flex: 1;
+    min-width: 140px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+  .emoji-card .em { font-size: 28px; margin-bottom: 6px; }
+  .emoji-card .em-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .emoji-card .em-sub { font-size: 12px; color: var(--text-muted); }
+
+  .final-card {
+    background: linear-gradient(135deg, #1e1a10 0%, #161310 100%);
+    border: 1px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 40px;
+    text-align: center;
+  }
+  .final-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .final-card p { color: var(--text-mid); max-width: 480px; margin: 0 auto 24px; }
+</style>
+</head>
+<body>
+
+<div class="progress-bar-wrap">
+  <div class="progress-bar-fill" id="progressBar"></div>
+</div>
+
+<nav>
+  <div class="nav-logo">Sinnvoll Academy</div>
+  <div class="nav-steps" id="navDots"></div>
+  <div class="nav-timer" id="slideTimer">⏱ 00:00</div>
+</nav>
+
+<main>
+
+<!-- SLIDE 0: HERO -->
+<div class="slide active" id="slide-0">
+  <div class="hero">
+    <div class="hero-badge">Sinnvoll Academy · Roadshow 2026</div>
+    <h1>Standards.<br><span>Systeme.</span><br>Sinnvoll.</h1>
+    <p class="hero-sub">Diese Schulung erklärt, warum wir neue Standards einführen, wie die wichtigsten Systeme funktionieren – und was das für deinen Alltag bedeutet.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Module</span>
+        <span class="hero-meta-value">7</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Übungen</span>
+        <span class="hero-meta-value">2</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Dauer</span>
+        <span class="hero-meta-value">~90 Min</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Zielgruppe</span>
+        <span class="hero-meta-value">Alle</span>
+      </div>
+    </div>
+  </div>
+  <div class="btn-row" style="justify-content:center">
+    <button class="btn btn-primary" onclick="goTo(1)">Schulung starten →</button>
+  </div>
+</div>
+
+<!-- SLIDE 1: WARUM -->
+<div class="slide" id="slide-1">
+  <div class="section-header">
+    <div class="section-num">Modul 1 / 7</div>
+    <h2>Warum machen wir <span class="hl">das überhaupt?</span></h2>
+    <p>Neue Standards machen nur Sinn, wenn du den Grund dahinter kennst. Hier ist er.</p>
+  </div>
+
+  <div class="trainer-note">
+    <strong>🎙 Trainer-Hinweis:</strong> Diesen Teil ruhig offen diskutieren. Frage ins Team: «Was nervt euch aktuell im Alltag am meisten?» – die Antworten werden die Ziele unten spiegeln.
+  </div>
+
+  <div class="highlight-text">
+    Heute arbeiten 14 Betriebe – aber jeder etwas <em>anders</em>. Das kostet Zeit, erzeugt Fehler und macht Qualität <em>nicht messbar</em>.
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><div class="icon">😵</div> Das Problem heute</div>
+      <p>Jeder Betrieb hat eigene Abläufe. Was in Weggis gilt, gilt nicht in Chiasso. Übergaben fehlen. Daten werden an falschen Orten erfasst. Neue Mitarbeitende brauchen ewig bis sie sicher arbeiten.</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="icon">🎯</div> Das Ziel ab April</div>
+      <p>Gleiche Prozesse – gleiche Qualität – überall. Nicht weil es eine Regel ist, sondern weil es <strong>deinen Alltag leichter macht</strong> und Gäste überall dasselbe erleben.</p>
+    </div>
+  </div>
+
+  <div class="why-box">
+    <div class="why-label">Warum ist das gut für dich?</div>
+    <p>Du weisst genau, was der Standard ist – und musst nicht jedes Mal neu entscheiden oder raten. Das spart Energie, reduziert Stress und gibt dir Sicherheit: Wenn etwas unklar ist, gibt es eine Antwort.</p>
+  </div>
+
+  <div class="emoji-row">
+    <div class="emoji-card">
+      <div class="em">⚡</div>
+      <div class="em-title">Schnelleres Onboarding</div>
+      <div class="em-sub">Neue Kolleginnen sind schneller produktiv</div>
+    </div>
+    <div class="emoji-card">
+      <div class="em">🔁</div>
+      <div class="em-title">Weniger Fehler</div>
+      <div class="em-sub">Klare Abläufe = weniger Nacharbeit</div>
+    </div>
+    <div class="emoji-card">
+      <div class="em">📊</div>
+      <div class="em-title">Vergleichbarkeit</div>
+      <div class="em-sub">Wir sehen, was funktioniert – und was nicht</div>
+    </div>
+    <div class="emoji-card">
+      <div class="em">🤝</div>
+      <div class="em-title">Vertrauen</div>
+      <div class="em-sub">Gäste erleben überall Sinnvoll-Qualität</div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="goTo(0)">← Zurück</button>
+    <button class="btn btn-primary" onclick="goTo(2)">Weiter →</button>
+  </div>
+</div>
+
+<!-- SLIDE 2: ROLLEN -->
+<div class="slide" id="slide-2">
+  <div class="section-header">
+    <div class="section-num">Modul 2 / 7</div>
+    <h2>Wer ist <span class="hl">wofür zuständig?</span></h2>
+    <p>Jede Rolle trägt Verantwortung – und jede Rolle bekommt das, was sie braucht.</p>
+  </div>
+
+  <div class="trainer-note">
+    <strong>🎙 Trainer-Hinweis:</strong> Klarmachen: Das ist keine Hierarchie-Schulung, sondern Klarheit über Erwartungen. Jede Rolle ist wichtig.
+  </div>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-title"><div class="icon">👔</div> Operations Manager</div>
+    <p style="margin-bottom:10px">Du organisierst Zeitfenster, Teilnehmer und Zugänge. <strong>Du bist nach der Schulung der Coach deines Teams</strong> – nicht Sinnvoll zentral.</p>
+    <div>
+      <span class="pill pill-gold">⚙ Umsetzung sicherstellen</span>
+      <span class="pill pill-gold">📋 Standards coachen</span>
+      <span class="pill pill-gold">📈 Messpunkte verfolgen</span>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-title"><div class="icon">👩‍💼</div> Team (alle Mitarbeitenden)</div>
+    <p style="margin-bottom:10px">Du nimmst aktiv teil, übst die Praxisfälle und <strong>wendest das Gelernte ab der nächsten Schicht an</strong>. Du weisst, wo du nachschlagen kannst.</p>
+    <div>
+      <span class="pill pill-green">✓ Aktive Teilnahme</span>
+      <span class="pill pill-green">✓ Sofortige Anwendung</span>
+      <span class="pill pill-green">✓ Fragen stellen</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="icon">🏢</div> Sinnvoll (Trainer / Zentrale)</div>
+    <p style="margin-bottom:10px">Wir führen die Schulung durch, dokumentieren offene Punkte und geben euch die Tools. <strong>Danach liegt die Umsetzung bei euch</strong> – wir messen und unterstützen.</p>
+    <div>
+      <span class="pill pill-red">📝 Status dokumentieren</span>
+      <span class="pill pill-red">🔄 30-Tage Follow-up</span>
+      <span class="pill pill-red">📦 Trainerpaket liefern</span>
+    </div>
+  </div>
+
+  <div class="why-box" style="margin-top:20px">
+    <div class="why-label">Warum dieser Aufbau?</div>
+    <p>Weil zentrale Schulungen allein nichts bringen. Standards leben erst, wenn sie im Alltag gecoacht werden – direkt vor Ort, von jemandem der den Betrieb kennt. Das bist du als Operations Manager.</p>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="goTo(1)">← Zurück</button>
+    <button class="btn btn-primary" onclick="goTo(3)">Weiter →</button>
+  </div>
+</div>
+
+<!-- SLIDE 3: KERNPROZESSE -->
+<div class="slide" id="slide-3">
+  <div class="section-header">
+    <div class="section-num">Modul 3 / 7</div>
+    <h2>Kernprozesse: <span class="hl">Was ändert sich?</span></h2>
+    <p>Nicht alles ändert sich – aber diese Abläufe müssen überall gleich funktionieren.</p>
+  </div>
+
+  <div class="trainer-note">
+    <strong>🎙 Trainer-Hinweis:</strong> Zu jedem Punkt ein konkretes Beispiel aus dem eigenen Betrieb nennen lassen. «Wie macht ihr das heute?» – dann den neuen Standard dagegen stellen.
+  </div>
+
+  <table class="sys-table">
+    <thead>
+      <tr>
+        <th>Prozess</th>
+        <th>Der neue Standard</th>
+        <th>Warum?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Neue Reservationen</strong></td>
+        <td>Immer in <strong>Simple Booking</strong> erfassen – nicht per Hand, nicht per Notiz</td>
+        <td>Damit alle Buchungen zentral sichtbar sind und keine verloren gehen</td>
+      </tr>
+      <tr>
+        <td><strong>Walk-ins / Restaurant</strong></td>
+        <td>Walk-ins <strong>immer in Aleno</strong> eintragen – auch wenn's nur ein Tisch ist</td>
+        <td>Auslastung ist nur messbar, wenn alle Daten erfasst sind</td>
+      </tr>
+      <tr>
+        <td><strong>Check-in / Check-out</strong></td>
+        <td>Kompensation und Kulanz <strong>in MEWS dokumentieren</strong>, nicht mündlich</td>
+        <td>Nachvollziehbarkeit für Buchhaltung, Analyse und nächste Schicht</td>
+      </tr>
+      <tr>
+        <td><strong>Schichtwechsel</strong></td>
+        <td>Übergabe mit <strong>schriftlicher Notiz</strong> im System – immer, nicht manchmal</td>
+        <td>Die nächste Schicht muss wissen, was offen ist – ohne mündliches Briefing</td>
+      </tr>
+      <tr>
+        <td><strong>OTA-Nachrichten</strong></td>
+        <td>Booking.com Nachrichten <strong>innerhalb 2h</strong> beantworten, Änderungen im PMS spiegeln</td>
+        <td>Response-Rate beeinflusst unser Ranking direkt</td>
+      </tr>
+      <tr>
+        <td><strong>Reklamationen</strong></td>
+        <td>Dokumentation im System, Eskalation nach Stufe – <strong>Standard vor Kreativlösung</strong></td>
+        <td>Wiederkehrende Themen nur sichtbar, wenn dokumentiert</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="why-box">
+    <div class="why-label">Das Prinzip dahinter</div>
+    <p><strong>Wenn etwas nicht im System steht, existiert es für uns nicht.</strong> Nicht weil wir bürokratisch sind – sondern weil wir nur verbessern können, was wir messen können. Und ihr nur dann Unterstützung bekommt, wenn das Problem sichtbar ist.</p>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="goTo(2)">← Zurück</button>
+    <button class="btn btn-primary" onclick="goTo(4)">Weiter: Aleno →</button>
+  </div>
+</div>
+
+<!-- SLIDE 4: ALENO -->
+<div class="slide" id="slide-4">
+  <div class="section-header">
+    <div class="section-num">Modul 4 / 7</div>
+    <h2><span class="hl">Aleno</span> – das Gäste&shy;management-System</h2>
+    <p>Aleno ist unser Standard für alle Restaurant-Reservationen und Walk-ins. Hier ist alles, was du dazu wissen musst.</p>
+  </div>
+
+  <div class="trainer-note">
+    <strong>🎙 Trainer-Hinweis:</strong> Wenn möglich: Aleno live auf einem Gerät zeigen. Die Maske «Neue Reservation» und «Walk-in eintragen» einmal gemeinsam durchgehen.
+  </div>
+
+  <div class="aleno-box">
+    <div class="aleno-badge">🍽 Aleno</div>
+    <h3>Was ist Aleno?</h3>
+    <p style="color:var(--text-mid); margin-bottom:16px">Aleno ist unser cloudbasiertes Reservations- und Tischmanagement-System für alle Restaurants und Bars. Es verbindet Online-Reservationen, Walk-in-Verwaltung, Gästeprofil-Daten und Auslastungsanalysen in einem System.</p>
+    <div class="grid-2" style="margin-bottom:0">
+      <div>
+        <strong style="color:var(--green-bright); font-size:13px">Aleno wird genutzt für:</strong>
+        <ul style="list-style:none; margin-top:8px">
+          <li style="padding:4px 0; font-size:13px; color:var(--text-mid)">✓ Tischreservierungen (online + telefonisch)</li>
+          <li style="padding:4px 0; font-size:13px; color:var(--text-mid)">✓ Walk-in Erfassung</li>
+          <li style="padding:4px 0; font-size:13px; color:var(--text-mid)">✓ Gästepräferenzen & -profile</li>
+          <li style="padding:4px 0; font-size:13px; color:var(--text-mid)">✓ Auslastungsübersicht</li>
+          <li style="padding:4px 0; font-size:13px; color:var(--text-mid)">✓ No-Show Verwaltung</li>
+        </ul>
+      </div>
+      <div>
+        <strong style="color:var(--red-bright); font-size:13px">Nicht in Aleno:</strong>
+        <ul style="list-style:none; margin-top:8px">
+          <li style="padding:4px 0; font-size:13px; color:var(--text-mid)">✗ Hotel-Check-in/out → MEWS</li>
+          <li style="padding:4px 0; font-size:13px; color:var(--text-mid)">✗ Zimmerreservierungen → Simple Booking</li>
+          <li style="padding:4px 0; font-size:13px; color:var(--text-mid)">✗ Housekeeping-Aufgaben → MEWS</li>
+          <li style="padding:4px 0; font-size:13px; color:var(--text-mid)">✗ Rechnungsstellung → MEWS</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-header" style="margin-bottom:20px">
+    <h2 style="font-size:22px">Die <span class="hl">wichtigste Regel</span>: Walk-ins immer erfassen</h2>
+  </div>
+
+  <ul class="rule-list">
+    <li>
+      <div class="rule-icon yes">✓</div>
+      <div class="rule-text">
+        <strong>Walk-in kommt rein – Tisch frei – sofort in Aleno eintragen</strong>
+        <span>Name (falls bekannt), Personenzahl, Uhrzeit, Tisch. Das dauert 30 Sekunden.</span>
+      </div>
+    </li>
+    <li>
+      <div class="rule-icon yes">✓</div>
+      <div class="rule-text">
+        <strong>Reservation per Telefon – in Aleno, nicht auf Zettel</strong>
+        <span>Telefonisch entgegengenommene Reservationen sofort in Aleno erfassen – nicht «später nachtragen».</span>
+      </div>
+    </li>
+    <li>
+      <div class="rule-icon no">✗</div>
+      <div class="rule-text">
+        <strong>«Den trag ich später nach» – gibt es nicht mehr</strong>
+        <span>Später heisst oft: nie. Oder mit falschen Daten. Oder gar nicht. Walk-in kommt rein = Aleno wird geöffnet.</span>
+      </div>
+    </li>
+    <li>
+      <div class="rule-icon no">✗</div>
+      <div class="rule-text">
+        <strong>Keine Parallelführung mit Excel / Notizbuch / Whiteboard</strong>
+        <span>Wenn Daten an mehreren Orten existieren, vertrauen wir keinem davon. Aleno ist das einzige System.</span>
+      </div>
+    </li>
+  </ul>
+
+  <div class="why-box">
+    <div class="why-label">Warum ist das so wichtig?</div>
+    <p>Auslastungsdaten sind die Grundlage für Personalplanung, Kücheneinkauf, Revenue Management und Investitionen. Wenn 30% der Gäste nicht erfasst sind, planen wir auf Basis falscher Zahlen. Das kostet Geld – und belastet dich, weil Ressourcen falsch zugeteilt werden.</p>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-header" style="margin-bottom:20px">
+    <h2 style="font-size:22px">Gästeprofil: <span class="hl">Gold wert</span></h2>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="icon">👤</div> Gästeprofile in Aleno</div>
+    <p style="margin-bottom:12px">Wenn ein Gast wiederkommt und wir wissen: «Tisch 7 war sein Lieblingstisch, er trinkt keinen Weisswein, seine Frau hat eine Nussallergie» – das ist Stammgastbeziehung. Das entsteht nur durch saubere Datenpflege in Aleno.</p>
+    <div>
+      <span class="pill pill-green">Allergieinformationen</span>
+      <span class="pill pill-green">Tischpräferenzen</span>
+      <span class="pill pill-green">Anmerkungen</span>
+      <span class="pill pill-green">Besuchshistorie</span>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="goTo(3)">← Zurück</button>
+    <button class="btn btn-primary" onclick="goTo(5)">Weiter: Systeme →</button>
+  </div>
+</div>
+
+<!-- SLIDE 5: SYSTEME OVERVIEW -->
+<div class="slide" id="slide-5">
+  <div class="section-header">
+    <div class="section-num">Modul 5 / 7</div>
+    <h2>Systeme: <span class="hl">Was wohin gehört</span></h2>
+    <p>Fünf Systeme – jedes hat eine klare Aufgabe. Die häufigsten Fehler entstehen, wenn etwas im falschen System landet.</p>
+  </div>
+
+  <div class="trainer-note">
+    <strong>🎙 Trainer-Hinweis:</strong> Diese Übersicht ausdrucken oder als Poster im Backoffice aufhängen. «Was ist mein Erstkontakt-System für X?» – das sollte jede und jeder sofort beantworten können.
+  </div>
+
+  <table class="sys-table">
+    <thead>
+      <tr>
+        <th>System</th>
+        <th>Zuständig für</th>
+        <th>Nicht zuständig für</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>🏨 MEWS (PMS)</strong></td>
+        <td>Hotel Check-in/out, Rechnungen, Kompensationen, Zimmernotizen, Housekeeping-Aufgaben</td>
+        <td>Restaurant-Reservationen, Buchhaltung, OTA-Kommunikation</td>
+      </tr>
+      <tr>
+        <td><strong>📅 Simple Booking</strong></td>
+        <td>Alle neuen Zimmerreservierungen, auch telefonisch</td>
+        <td>Walk-ins, Restaurant, Direktbuchungen die schon in MEWS sind</td>
+      </tr>
+      <tr>
+        <td><strong>🍽 Aleno</strong></td>
+        <td>Alle Tischreservierungen, Walk-ins, Gästeprofile Restaurant</td>
+        <td>Zimmer, Hotel-Check-in, Rechnungen</td>
+      </tr>
+      <tr>
+        <td><strong>🔑 Salto</strong></td>
+        <td>Zugangskontrolle, Schlüsselkarten, Türverwaltung</td>
+        <td>Reservierungen, Kommunikation, Daten</td>
+      </tr>
+      <tr>
+        <td><strong>🌐 Booking.com Portal</strong></td>
+        <td>OTA-Kommunikation, Stornos, Preisanpassungen extern</td>
+        <td>PMS-Daten, interne Notizen, Kompensationen</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="why-box">
+    <div class="why-label">Das goldene Prinzip</div>
+    <p><strong>Jedes System hat eine Aufgabe. Wenn du dir nicht sicher bist: Schaue in die Systemübersicht – und wenn es keine gibt, frage deinen Operations Manager. Improvisieren im falschen System kostet alle mehr Zeit als die 30 Sekunden Nachfrage.</strong></p>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <div class="card-title"><div class="icon">💬</div> Was tun bei Unklarheit?</div>
+    <p>Standard anwenden → dokumentieren → dann klären. Nicht umgekehrt. Wenn du etwas nicht weisst: kurze Notiz machen, dann im nächsten Briefing ansprechen.</p>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="goTo(4)">← Zurück</button>
+    <button class="btn btn-primary" onclick="goTo(6)">Weiter: Übung 1 →</button>
+  </div>
+</div>
+
+<!-- SLIDE 6: ÜBUNG 1 - QUIZ -->
+<div class="slide" id="slide-6">
+  <div class="section-header">
+    <div class="section-num">Übung 1 / 2</div>
+    <h2>Quick Check: <span class="hl">Was kommt wohin?</span></h2>
+    <p>5 kurze Fragen – kein Stress. Es geht darum, zu sehen wo noch Unsicherheit ist.</p>
+  </div>
+
+  <div class="trainer-note">
+    <strong>🎙 Trainer-Hinweis:</strong> Entweder alle gleichzeitig auf eigenem Gerät, oder als Gruppenspiel: Frage laut vorlesen, Team antwortet gemeinsam. Falsche Antworten direkt besprechen.
+  </div>
+
+  <div class="quiz-wrap" id="quizWrap">
+    <!-- Q1 -->
+    <div class="quiz-q" id="qq-1">
+      <div class="quiz-q-num">Frage 1 von 5</div>
+      <div class="quiz-q-text">Ein Gast ruft an und möchte einen Tisch für heute Abend reservieren. Wo trägst du es ein?</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="answerQuiz(1,0,false)">A) Im Notizbuch an der Rezeption</button>
+        <button class="quiz-option" onclick="answerQuiz(1,1,true)">B) Direkt in Aleno</button>
+        <button class="quiz-option" onclick="answerQuiz(1,2,false)">C) In Simple Booking</button>
+        <button class="quiz-option" onclick="answerQuiz(1,3,false)">D) Im MEWS als Gästenotiz</button>
+      </div>
+      <div class="quiz-feedback" id="qf-1"></div>
+    </div>
+    <!-- Q2 -->
+    <div class="quiz-q" id="qq-2">
+      <div class="quiz-q-num">Frage 2 von 5</div>
+      <div class="quiz-q-text">Ein Gast bucht telefonisch ein Zimmer für nächste Woche. Wo erfasst du die Reservation?</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="answerQuiz(2,0,false)">A) Direkt in MEWS</button>
+        <button class="quiz-option" onclick="answerQuiz(2,1,false)">B) In Aleno</button>
+        <button class="quiz-option" onclick="answerQuiz(2,2,true)">C) In Simple Booking</button>
+        <button class="quiz-option" onclick="answerQuiz(2,3,false)">D) Per E-Mail an die Zentrale</button>
+      </div>
+      <div class="quiz-feedback" id="qf-2"></div>
+    </div>
+    <!-- Q3 -->
+    <div class="quiz-q" id="qq-3">
+      <div class="quiz-q-num">Frage 3 von 5</div>
+      <div class="quiz-q-text">Ein Gast beschwert sich beim Check-out über Lärm in der Nacht. Du gibst ihm als Kulanz 20% Rabatt. Was tust du?</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="answerQuiz(3,0,false)">A) Nichts – der Gast ist zufrieden, das reicht</button>
+        <button class="quiz-option" onclick="answerQuiz(3,1,true)">B) Kulanz in MEWS dokumentieren</button>
+        <button class="quiz-option" onclick="answerQuiz(3,2,false)">C) Im Notizbuch festhalten</button>
+        <button class="quiz-option" onclick="answerQuiz(3,3,false)">D) Mündlich an Kollegen weitergeben</button>
+      </div>
+      <div class="quiz-feedback" id="qf-3"></div>
+    </div>
+    <!-- Q4 -->
+    <div class="quiz-q" id="qq-4">
+      <div class="quiz-q-num">Frage 4 von 5</div>
+      <div class="quiz-q-text">Du kommst zum Schichtwechsel. Die Kollegin erklärt mündlich was offen ist. Was machst du zusätzlich?</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="answerQuiz(4,0,false)">A) Reicht so – ich hab's im Kopf</button>
+        <button class="quiz-option" onclick="answerQuiz(4,1,false)">B) Ich schreibe es auf einen Post-it</button>
+        <button class="quiz-option" onclick="answerQuiz(4,2,true)">C) Ich stelle sicher, dass die offenen Punkte im System stehen</button>
+        <button class="quiz-option" onclick="answerQuiz(4,3,false)">D) Ich warte bis etwas schiefläuft</button>
+      </div>
+      <div class="quiz-feedback" id="qf-4"></div>
+    </div>
+    <!-- Q5 -->
+    <div class="quiz-q" id="qq-5">
+      <div class="quiz-q-num">Frage 5 von 5</div>
+      <div class="quiz-q-text">Eine Booking.com Nachricht kommt herein. Wann spätestens antwortest du?</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="answerQuiz(5,0,false)">A) Irgendwann heute</button>
+        <button class="quiz-option" onclick="answerQuiz(5,1,true)">B) Innerhalb von 2 Stunden</button>
+        <button class="quiz-option" onclick="answerQuiz(5,2,false)">C) Am nächsten Arbeitstag</button>
+        <button class="quiz-option" onclick="answerQuiz(5,3,false)">D) Nur wenn es dringend aussieht</button>
+      </div>
+      <div class="quiz-feedback" id="qf-5"></div>
+    </div>
+  </div>
+
+  <div class="quiz-score" id="quizScore">
+    <div class="score-num" id="scoreNum">–</div>
+    <p id="scoreMsg">–</p>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="goTo(5)">← Zurück</button>
+    <button class="btn btn-primary" onclick="goTo(7)">Weiter: Übung 2 →</button>
+  </div>
+</div>
+
+<!-- SLIDE 7: ÜBUNG 2 - SZENARIO -->
+<div class="slide" id="slide-7">
+  <div class="section-header">
+    <div class="section-num">Übung 2 / 2</div>
+    <h2>Praxisfall: <span class="hl">Was würdest du tun?</span></h2>
+    <p>Ein realer Ablauf – zwei Szenarien. Wähle die beste Reaktion und erkläre warum.</p>
+  </div>
+
+  <div class="trainer-note">
+    <strong>🎙 Trainer-Hinweis:</strong> Diese Übung am besten in kleinen Gruppen (2–3 Personen). Erst intern besprechen, dann gemeinsam auflösen. Diskussion ist erwünscht!
+  </div>
+
+  <!-- SCENARIO A -->
+  <div class="scenario-box">
+    <div class="scenario-label">📌 Szenario A – Restaurant / Aleno</div>
+    <div class="scenario-text">
+      Es ist Samstagabend, 19:15 Uhr. Das Restaurant ist voll. Ein Paar kommt ohne Reservation rein und fragt nach einem Tisch. Du siehst, dass Tisch 4 in 20 Minuten frei wird. Du sagst: «Gerne, in 20 Minuten – darf ich Ihren Namen?»
+    </div>
+    <div class="scenario-question">Was ist der nächste Schritt?</div>
+    <div class="scenario-options">
+      <button class="scenario-option" onclick="answerScenario('a', 0, 'wrong')">A) Ich merke mir den Namen und trage es nach dem Abendservice ein</button>
+      <button class="scenario-option" onclick="answerScenario('a', 1, 'best')">B) Ich öffne Aleno sofort und erfasse den Walk-in mit Name, Personenzahl und Tisch</button>
+      <button class="scenario-option" onclick="answerScenario('a', 2, 'ok')">C) Ich schreibe es auf einen Zettel und gebe ihn an den Kollegen weiter</button>
+      <button class="scenario-option" onclick="answerScenario('a', 3, 'wrong')">D) Kein Eintrag nötig – es ist nur ein kurzer Tisch</button>
+    </div>
+    <div class="scenario-result" id="sr-a"></div>
+  </div>
+
+  <!-- SCENARIO B -->
+  <div class="scenario-box" style="margin-top:24px">
+    <div class="scenario-label">📌 Szenario B – Reklamation / MEWS</div>
+    <div class="scenario-text">
+      Montag, 10:00 Uhr. Eine Gästin checkt aus und erwähnt, dass das Zimmer am ersten Abend nicht richtig geputzt war. Sie war sonst zufrieden und sagt, sie kommt gerne wieder. Du entscheidest dich, ihr den nächsten Aufenthalt mit 15% Rabatt anzubieten als Goodwill-Geste.
+    </div>
+    <div class="scenario-question">Was tust du als nächstes?</div>
+    <div class="scenario-options">
+      <button class="scenario-option" onclick="answerScenario('b', 0, 'ok')">A) Ich informiere den Housekeeping-Verantwortlichen mündlich</button>
+      <button class="scenario-option" onclick="answerScenario('b', 1, 'wrong')">B) Ich notiere es im persönlichen Notizbuch für mein nächstes Team-Meeting</button>
+      <button class="scenario-option" onclick="answerScenario('b', 2, 'best')">C) Ich dokumentiere die Reklamation und den Goodwill-Rabatt in MEWS und informiere Housekeeping schriftlich</button>
+      <button class="scenario-option" onclick="answerScenario('b', 3, 'wrong')">D) Nichts – die Gästin war am Ende zufrieden</button>
+    </div>
+    <div class="scenario-result" id="sr-b"></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="goTo(6)">← Zurück</button>
+    <button class="btn btn-primary" onclick="goTo(8)">Weiter: Abschluss →</button>
+  </div>
+</div>
+
+<!-- SLIDE 8: ABSCHLUSS -->
+<div class="slide" id="slide-8">
+  <div class="final-card">
+    <h2>✓ Schulung abgeschlossen</h2>
+    <p>Gut gemacht. Du hast heute die Grundlagen der Sinnvoll Academy durchgearbeitet. Ab jetzt gilt: Standard anwenden, dokumentieren, dann klären.</p>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-header" style="margin-bottom:20px">
+    <h2 style="font-size:22px">Die <span class="hl">3 wichtigsten Dinge</span> für morgen</h2>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <h4>1. Aleno ist immer offen</h4>
+      <p>Jeder Walk-in wird sofort erfasst. Nicht nach dem Service. Sofort. Das dauert 30 Sekunden und gibt uns die Daten, die wir brauchen.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <h4>2. Jedes System hat eine Aufgabe</h4>
+      <p>Zimmerreservation → Simple Booking. Walk-in/Restaurant → Aleno. Hotel-Notizen/Kulanz → MEWS. Wenn du unsicher bist: nachfragen ist besser als raten.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <h4>3. Dokumentiert existiert</h4>
+      <p>Mündlich gesagt = nicht passiert. Notiz im System = sichtbar, nachvollziehbar, hilfreich für alle. Für dich, für die nächste Schicht, für den Betrieb.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-header" style="margin-bottom:20px">
+    <h2 style="font-size:22px">Nächste <span class="hl">Schritte</span></h2>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><div class="icon">📋</div> Bis heute</div>
+      <p>Systemzugänge prüfen: MEWS, Simple Booking, Aleno, Salto, Booking.com. Wenn etwas fehlt: sofort melden.</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="icon">🔄</div> In 30 Tagen</div>
+      <p>Kurzes Follow-up Gespräch: Was läuft gut? Wo gibt es noch Fragen? Welche offenen Punkte aus dem Standortplan sind erledigt?</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="icon">❓</div> Bei Unklarheit</div>
+      <p>Erst Standard anwenden. Dann dokumentieren. Dann beim Operations Manager klären – nicht umgekehrt.</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="icon">📦</div> Trainerpaket</div>
+      <p>Ihr erhaltet Checklisten, Praxisfälle und Nachweisformate für internes Weitertraining direkt vom Sinnvoll-Trainer.</p>
+    </div>
+  </div>
+
+  <div class="why-box" style="margin-top:8px">
+    <div class="why-label">Das Wichtigste zum Schluss</div>
+    <p>Diese Standards sind nicht da um zu kontrollieren. Sie sind da, damit ihr <strong>weniger Stress</strong> habt, <strong>sicherer arbeitet</strong> und Gäste <strong>überall das gleiche gute Erlebnis</strong> bekommen. Wir bauen das gemeinsam auf – ihr seid der Grund, dass es funktioniert.</p>
+  </div>
+
+  <div class="btn-row" style="justify-content:center; padding-top:40px">
+    <button class="btn btn-ghost" onclick="goTo(0)">↺ Von vorne</button>
+    <button class="btn btn-primary" onclick="goTo(7)">← Übungen wiederholen</button>
+  </div>
+</div>
+
+</main>
+
+<script>
+  const TOTAL = 9;
+  let currentSlide = 0;
+  let quizAnswers = {};
+  let quizCount = 0;
+  let timerInterval = null;
+  let slideStartTime = null;
+  let totalSeconds = 0;
+
+  function goTo(n) {
+    document.getElementById('slide-' + currentSlide).classList.remove('active');
+    currentSlide = n;
+    document.getElementById('slide-' + n).classList.add('active');
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    updateNav();
+    resetTimer();
+  }
+
+  function updateNav() {
+    const dots = document.getElementById('navDots');
+    dots.innerHTML = '';
+    for (let i = 0; i < TOTAL; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'nav-dot';
+      if (i === currentSlide) btn.classList.add('active');
+      else if (i < currentSlide) btn.classList.add('done');
+      btn.onclick = () => goTo(i);
+      btn.title = 'Slide ' + (i+1);
+      dots.appendChild(btn);
+    }
+    const pct = (currentSlide / (TOTAL - 1)) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+  }
+
+  function resetTimer() {
+    clearInterval(timerInterval);
+    totalSeconds = 0;
+    updateTimerDisplay();
+    slideStartTime = Date.now();
+    timerInterval = setInterval(() => {
+      totalSeconds = Math.floor((Date.now() - slideStartTime) / 1000);
+      updateTimerDisplay();
+    }, 1000);
+  }
+
+  function updateTimerDisplay() {
+    const m = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+    const s = String(totalSeconds % 60).padStart(2, '0');
+    document.getElementById('slideTimer').textContent = '⏱ ' + m + ':' + s;
+  }
+
+  // QUIZ
+  const quizCorrect = { 1: 1, 2: 2, 3: 1, 4: 2, 5: 1 };
+  const quizExplanations = {
+    1: { ok: '✓ Richtig! Telefonische Tischreservierungen gehören sofort in Aleno – auch wenn es "schnell geht".', fail: '✗ Nur Aleno ist das richtige System für Tischreservierungen. Notizblock und MEWS sind für andere Aufgaben.' },
+    2: { ok: '✓ Genau! Alle neuen Zimmerreservierungen gehen in Simple Booking – auch telefonisch.', fail: '✗ Telefonische Zimmerreservierungen gehören in Simple Booking, nicht direkt in MEWS oder Aleno.' },
+    3: { ok: '✓ Perfekt! Jede Kulanz muss in MEWS dokumentiert werden – für die Buchhaltung und die nächste Schicht.', fail: '✗ Kulanz ohne Systemdokumentation existiert für uns nicht. MEWS ist der richtige Ort dafür.' },
+    4: { ok: '✓ Richtig! Mündliche Übergaben sind gut, aber die offenen Punkte müssen im System stehen.', fail: '✗ Post-it und Kopf-Notizen gehen verloren. Offene Punkte gehören ins System – das ist die Grundlage für gute Übergaben.' },
+    5: { ok: '✓ Korrekt! 2 Stunden ist der Standard. Schnellere Antworten verbessern unser Ranking direkt.', fail: '✗ OTA-Nachrichten müssen innerhalb von 2 Stunden beantwortet werden. Längere Wartezeiten schaden unserem Ranking.' }
+  };
+
+  let quizScoreCount = 0;
+  let quizAnswered = {};
+
+  function answerQuiz(qNum, optIdx, isCorrect) {
+    if (quizAnswered[qNum]) return;
+    quizAnswered[qNum] = true;
+    const qq = document.getElementById('qq-' + qNum);
+    const opts = qq.querySelectorAll('.quiz-option');
+    const correctIdx = quizCorrect[qNum];
+    opts.forEach(o => o.disabled = true);
+    opts[correctIdx].classList.add('correct');
+    if (!isCorrect) opts[optIdx].classList.add('wrong');
+    if (isCorrect) quizScoreCount++;
+    const fb = document.getElementById('qf-' + qNum);
+    fb.className = 'quiz-feedback show ' + (isCorrect ? 'ok' : 'fail');
+    fb.textContent = isCorrect ? quizExplanations[qNum].ok : quizExplanations[qNum].fail;
+    quizCount++;
+    if (quizCount >= 5) showQuizScore();
+  }
+
+  function showQuizScore() {
+    const scoreEl = document.getElementById('quizScore');
+    scoreEl.classList.add('show');
+    document.getElementById('scoreNum').textContent = quizScoreCount + '/5';
+    const msgs = ['Noch etwas Übung nötig – kein Problem, dafür sind wir hier. 💪', 'Solide! Die meisten Punkte sitzen. Schau die falschen Antworten nochmal an.', 'Sehr gut! Du hast die Kernregeln verstanden. Weiter so! 🎯', 'Perfekt! 5/5 – du kennst die Standards. 🏆'];
+    document.getElementById('scoreMsg').textContent = quizScoreCount <= 1 ? msgs[0] : quizScoreCount <= 3 ? msgs[1] : quizScoreCount === 4 ? msgs[2] : msgs[3];
+  }
+
+  // SCENARIO
+  const scenarioFeedback = {
+    a: {
+      wrong: { title: '✗ Nicht die beste Wahl', msg: 'Nachträglich eintragen bedeutet oft: falsche Zeit, falscher Tisch, oder gar kein Eintrag. Walk-in-Daten müssen sofort erfasst werden – das dauert nur Sekunden.' },
+      best: { title: '✓ Genau richtig!', msg: 'Aleno sofort öffnen und Walk-in erfassen ist der Standard. Name, Personenzahl, Tisch – fertig. Das gibt euch verlässliche Auslastungsdaten und schützt den Tisch.' },
+      ok: { title: '△ Besser als nichts – aber nicht der Standard', msg: 'Ein Zettel kann verloren gehen und landet nicht in den Systemdaten. Die Daten fehlen dann für die Auslastungsanalyse. Besser: direkt in Aleno.' }
+    },
+    b: {
+      ok: { title: '△ Teilweise richtig – aber unvollständig', msg: 'Housekeeping informieren ist gut. Aber ohne Systemdokumentation fehlt der Goodwill-Rabatt in der Buchhaltung und das Muster (Zimmerstatus) wird nicht sichtbar.' },
+      wrong: { title: '✗ Nicht ausreichend', msg: 'Persönliche Notizen helfen niemandem ausser dir. Und wenn du krank wirst oder die Schicht wechselst, ist die Information weg.' },
+      best: { title: '✓ Perfekt!', msg: 'MEWS-Dokumentation + schriftliche Information an Housekeeping = vollständige Kette. Der Rabatt ist nachvollziehbar, das Qualitätsproblem wird sichtbar, und die nächste Schicht weiss Bescheid.' }
+    }
+  };
+
+  let scenarioAnswered = {};
+  function answerScenario(id, idx, quality) {
+    if (scenarioAnswered[id]) return;
+    scenarioAnswered[id] = true;
+    const box = document.querySelector(`[onclick="answerScenario('${id}', ${idx}, '${quality}')"]`).closest('.scenario-box');
+    const opts = box.querySelectorAll('.scenario-option');
+    opts.forEach(o => {
+      o.disabled = true;
+      const fn = o.getAttribute('onclick');
+      if (fn.includes("'best'")) o.classList.add('best');
+    });
+    if (quality !== 'best') opts[idx].classList.add(quality === 'ok' ? 'ok' : 'wrong');
+    const res = document.getElementById('sr-' + id);
+    const data = scenarioFeedback[id][quality];
+    res.className = 'scenario-result show ' + quality + '-res';
+    res.innerHTML = `<strong>${data.title}</strong>${data.msg}`;
+  }
+
+  // INIT
+  updateNav();
+  resetTimer();
+</script>
+</body>
+</html>
